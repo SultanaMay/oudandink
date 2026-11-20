@@ -243,7 +243,7 @@ const FAMC={Floral:"#b3476b","Fruity floral":"#c4546a",Woody:"#7a5634",Amber:"#b
 const S={lang:"en",view:"home",db:null,user:null,me:null,owner:false,canWrite:true,bottles:[],catalog:[],shelves:[],loaded:false,slow:false,f:{q:"",gender:"",season:"",family:"",occasion:"",time:"",status:"",conc:""},group:"none",edit:null,form:null,photo:"",file:null,sample:null,canImg:false,openShelf:null,status:"",delArm:null};
 try{const l=localStorage.getItem("oudink-lang");if(l==="ar"||l==="en")S.lang=l;const g=localStorage.getItem("oudink-group2");if(g)S.group=g}catch(e){}
 const $=s=>document.querySelector(s);
-const t=k=>T[S.lang][k]??T.en[k]??k;
+const t=k=>T[S.lang][k]??T.en[k]??k;window.OI={S,T,t,esc:x=>esc(x),render:()=>render()};
 const ENL={Feminine:"For her",Masculine:"For him",Unisex:"Unisex"};
 const tx=v=>S.lang==="ar"?(AR[v]||v):(ENL[v]||v);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
