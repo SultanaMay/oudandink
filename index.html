@@ -331,10 +331,11 @@ function heroHTML(items,title,sub){
 function render(){
   document.documentElement.lang=S.lang;document.documentElement.dir=S.lang==="ar"?"rtl":"ltr";
   $("#lang").textContent=S.lang==="ar"?"English":"العربية";
-  $("#nav").innerHTML=["home","today","shelf","diary","insights","community","add"].map(v=>`<button data-act="nav" data-v="${v}" aria-current="${S.view===v||(v==="community"&&["shelfview","discover"].includes(S.view))||(v==="shelf"&&S.view==="wishlist")}">${t(v)}</button>`).join("");
+  $("#nav").innerHTML=["home","today","shelf","diary","insights","community","add"].concat(S.owner?["admin"]:[]).map(v=>`<button data-act="nav" data-v="${v}" aria-current="${S.view===v||(v==="community"&&["shelfview","discover"].includes(S.view))||(v==="shelf"&&S.view==="wishlist")}">${t(v)}</button>`).join("");
   const app=$("#app");
   const ae=document.activeElement,fid=ae&&ae.id&&/^(INPUT|TEXTAREA)$/.test(ae.tagName)&&ae.type!=="checkbox"?ae.id:null,pos=fid?ae.selectionStart:0;
-  if(S.view==="add")app.innerHTML=addHTML();
+  if(S.view==="admin"&&S.owner&&window.adminHTML)app.innerHTML=adminHTML();
+  else if(S.view==="add")app.innerHTML=addHTML();
   else if(S.view==="home")app.innerHTML=homeHTML();
   else if(S.view==="wishlist")app.innerHTML=wishlistHTML();
   else if(S.view==="discover")app.innerHTML=discoverHTML();
@@ -942,7 +943,7 @@ function pdfPage(list,p,n){
 
 /* ---------- navigation & events ---------- */
 function go(v){if(v==="explore"||v==="share")v="community";S.view=v;S.status="";if(v!=="add"){S.form=null;S.edit=null}try{history.replaceState(null,"","#"+(v==="shelfview"?"s-"+S.openShelf:v==="gift"?"w-"+S.openWish:v))}catch(e){}render();scrollTo(0,0)}
-function fromHash(){const h=location.hash.slice(1);if(h.startsWith("s-")){S.openShelf=h.slice(2);S.view="shelfview"}else if(h.startsWith("w-")){S.openWish=h.slice(2);S.view="gift"}else if(["home","today","shelf","wishlist","diary","insights","discover","add","community"].includes(h))S.view=h;else if(h==="explore"||h==="share")S.view="community";else S.view="home";render()}
+function fromHash(){const h=location.hash.slice(1);if(h.startsWith("s-")){S.openShelf=h.slice(2);S.view="shelfview"}else if(h.startsWith("w-")){S.openWish=h.slice(2);S.view="gift"}else if(["home","today","shelf","wishlist","diary","insights","discover","add","community","admin"].includes(h))S.view=h;else if(h==="explore"||h==="share")S.view="community";else S.view="home";render()}
 addEventListener("hashchange",fromHash);
 const findItem=(id,ro)=>ro?(()=>{const s=S.shelves.find(x=>x.handle===S.openShelf);const i=Number(id.slice(1));return s?.items?.[i]})():S.bottles.find(b=>b.id===id);
 document.addEventListener("click",async e=>{
@@ -1035,6 +1036,7 @@ fromHash();
 })();
 }
 </script>
+<script src="admin.js"></script>
 <script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))</script>
 </body>
 </html>
